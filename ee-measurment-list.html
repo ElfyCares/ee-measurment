@@ -1,0 +1,91 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!-- Iron -->
+
+<!-- Paper -->
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+
+<!-- Elfy -->
+<link rel="import" href="../ee-helper-behaviors/ee-helper-behavior.html">
+
+<!-- Third -->
+<link rel="import" href="../paper-fab-transitions/paper-fab-transitions.html">
+<link rel="import" href="../paper-fab-transitions/paper-fab-morph.html">
+
+<!-- My -->
+<link rel="import" href="ee-measurment.html">
+
+<dom-module id="ee-measurment-list">
+  <template>
+    <style is="custom-style" include="shared-styles">
+      :host {
+          display: block;
+      }
+
+      ee-measurment {
+        max-width: 300px;
+        margin: 0 auto;
+      }
+    </style>
+
+    <ee-measurment-charts care-recipient="[[careRecipient]]"></ee-measurment-charts>
+
+    <template is="dom-repeat" items="{{measurments}}" as="measurment">
+      <ee-measurment
+        care-recipient="[[careRecipient]]"
+        measurment="{{measurment}}"
+        on-remove="_removeLog">
+      </ee-measurment>
+    </template>
+
+    <div class="v-c">
+      <paper-fab-morph class="v-i" vertical-align="bottom" horizontal-align="left">
+        <paper-fab icon="icons:add" class="dropdown-trigger"></paper-fab>
+        <paper-material class="dropdown-content">
+          <paper-menu>
+            <paper-item on-tap="_addLog" data-args="bloodPressure">Blood Pressure</paper-item>
+            <paper-item on-tap="_addLog" data-args="heartRate">Heart Rate</paper-item>
+            <paper-item on-tap="_addLog" data-args="bloodSugar">Blood Sugar</paper-item>
+            <paper-item on-tap="_addLog" data-args="weight">Weight</paper-item>
+            <paper-item on-tap="_addLog" data-args="other">Other</paper-item>
+          </paper-menu>
+        </paper-material>
+      </paper-fab-morph>
+    </div>
+  </template>
+  <script>
+    Polymer({
+
+      is: 'ee-measurment-list',
+
+      behaviors: [
+        Elfy.EEHelperBehavior,
+      ],
+
+      properties: {
+        careRecipient: {
+          type: Object,
+          value() { return {} },
+        },
+
+        measurments: {
+          type: Array,
+          value() { return [] }
+        },
+      },
+
+      _addLog(e) {
+        var vitalityType = e.currentTarget.dataset.args
+        var measurment = App.Store.createRecord('measurments')
+        measurment.vitalityType = vitalityType
+        this.push('measurments', measurment);
+      },
+
+      _removeLog(e) {
+        this.splice('measurments', this.measurments.indexOf(e.model.measurment), 1);
+      },
+
+    });
+  </script>
+</dom-module>

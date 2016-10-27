@@ -1,0 +1,284 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!-- Iron -->
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+
+<!-- Paper -->
+<link rel="import" href="../paper-input/paper-input.html">
+
+<!-- Elfy -->
+<link rel="import" href="../ee-helper-behaviors/ee-helper-behavior.html">
+<link rel="import" href="../js-data-behaviors/js-data-record-behavior.html">
+
+<!-- My -->
+<link rel="import" href="ee-vitality-simple-input.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+TODO: Pain scale
+
+Example:
+
+    <ee-measurment></ee-measurment>
+
+@demo demo/index.html
+@hero hero.svg
+-->
+<dom-module id="ee-measurment">
+  <template>
+    <style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+      }
+
+      paper-input.unit {
+        margin-right: 12px;
+      }
+
+      .h {
+        @apply(--layout-horizontal);
+      }
+
+      .other-box {
+        border: 1px solid #f6f6f6;
+        padding: 6px;
+      }
+    </style>
+    <div class="h">
+      <template is="dom-if" if="[[_eql(vitalityType, 'bloodPressure')]]">
+        <ee-vitality-simple-input invalid$=[[invalid]]
+          value="{{bloodPressureValue}}"
+          label="Blood pressure"
+          max="300"
+          unit="[[bloodPressureUnit]]">
+        </ee-vitality-simple-input>
+      </template>
+
+      <template is="dom-if" if="[[_eql(vitalityType, 'heartRate')]]">
+        <ee-vitality-simple-input invalid$=[[invalid]]
+          icon="icons:timeline"
+          value="{{heartRateValue}}"
+          label="Heart rate"
+          unit="[[heartRateUnit]]">
+        </ee-vitality-simple-input>
+      </template>
+
+      <template is="dom-if" if="[[_eql(vitalityType, 'bloodSugar')]]">
+        <ee-vitality-simple-input invalid$=[[invalid]]
+          value="{{bloodSugarValue}}"
+          icon="icons:invert-colors"
+          label="Blood sugar"
+          unit="[[bloodSugarunit]]">
+        </ee-vitality-simple-input>
+      </template>
+
+      <template is="dom-if" if="[[_eql(vitalityType, 'weight')]]">
+        <ee-vitality-simple-input invalid$=[[invalid]]
+          value="{{weightValue}}"
+          icon="icons:accessibility"
+          label="Weight"
+          max="250"
+          unit="[[weightUnit]]">
+        </ee-vitality-simple-input>
+      </template>
+
+      <template is="dom-if" if="[[_eql(vitalityType, 'other')]]">
+        <div class="other-box">
+          <div class="h">
+            <paper-input class="unit"
+              label="Name"
+              placeholder="e.g.oxygen saturation"
+              value="{{otherName}}">
+            </paper-input>
+            <paper-input class="unit"
+              label="Unit"
+              placeholder="e.g. kg, mm, ..."
+              value="{{otherUnit}}">
+            </paper-input>
+          </div>
+          <ee-vitality-simple-input invalid$=[[invalid]]
+            value="{{otherValue}}"
+            icon="icons:gesture"
+            label="Value"
+            unit="{{otherUnit}}">
+          </ee-vitality-simple-input>
+        <div>
+      </template>
+      <paper-icon-button on-tap="_remove" icon="close"></paper-icon-button>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'ee-measurment',
+
+      recordName: 'maeasurment',
+
+      behaviors: [
+        Elfy.EEHelperBehavior,
+        Elfy.JSDataRecordBehavior,
+      ],
+
+      properties: {
+
+        invalid: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        vitalityType: {
+          type: String,
+          value: '',
+          notify: true,
+          computed: "_alias(measurment.vitalityType, '')"
+        },
+
+        bloodPressureValue: {
+          type: String,
+          value: ''
+        },
+
+        bloodPressureUnit: {
+          type: String,
+          value: 'mmHg',
+          notify: true
+        },
+
+        bloodPressureName: {
+          type: String,
+          value: 'Blood Pressure',
+          notify: true
+        },
+
+        heartRateValue: {
+          type: String,
+          value: ''
+        },
+
+        heartRateUnit: {
+          type: String,
+          value: 'bpm',
+          notify: true
+        },
+
+        heartRateName: {
+          type: String,
+          value: 'Heart Rate',
+          notify: true
+        },
+
+        bloodSugarValue: {
+          type: String,
+          value: ''
+        },
+
+        bloodSugarUnit: {
+          type: String,
+          value: 'mmol/L',
+          notify: true
+        },
+
+        bloodSugarName: {
+          type: String,
+          value: 'Blood Sugar',
+          notify: true
+        },
+
+        weightValue: {
+          type: String,
+          value: ''
+        },
+
+        weightUnit: {
+          type: String,
+          value: 'kg',
+          notify: true
+        },
+
+        weightName: {
+          type: String,
+          value: 'Weight',
+          notify: true
+        },
+
+        otherValue: {
+          type: String,
+          value: ''
+        },
+
+        otherUnit: {
+          type: String,
+          value: '',
+          notify: true
+        },
+
+        otherName: {
+          type: String,
+          value: '',
+          notify: true
+        },
+
+        maeasurment: {
+          type: Object,
+          value() { return {} }
+        },
+
+        value: {
+          type: String,
+          value: '',
+          notify: true,
+          computed: '_computeValue(\
+            vitalityType, bloodPressureValue, heartRateValue, bloodSugarValue, weightValue, otherValue)'
+        },
+
+        unit: {
+          type: String,
+          value: '',
+          notify: true,
+          computed: '_computeUnit(vitalityType, weightUnit, bloodPressureUnit, heartRateUnit, bloodSugarUnit, otherUnit)'
+        },
+
+        name: {
+          type: String,
+          value: '',
+          notify: true,
+          computed: '_computeName(vitalityType, weightName, bloodPressureName, heartRateName, bloodSugarName, otherName)'
+        },
+      },
+
+      observers: [
+        '_updateMeasurment(value,name,unit)'
+      ],
+
+      _remove() {
+        this.fire('remove')
+      },
+
+      _updateMeasurment(value, name, unit) {
+        this.set('measurment.value', value)
+        this.set('measurment.name', name)
+        this.set('measurment.unit', unit)
+      },
+
+      _computeValue(vitalityType) {
+        let key = vitalityType + 'Value'
+        return parseFloat(this[key])
+      },
+
+      _computeUnit(vitalityType) {
+        let key = vitalityType + 'Unit'
+        return this[key]
+      },
+
+      _computeName(vitalityType) {
+        let key = vitalityType + 'Name'
+        return this[key]
+      },
+    });
+  </script>
+</dom-module>
