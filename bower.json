@@ -10,7 +10,8 @@
     "js-data-behaviors": "git+https://github.com/ElfyCares/js-data-behaviors",
     "demo-models": "git+https://github.com/ElfyCares/demo-models",
     "ee-shared-styles": "git+https://github.com/ElfyCares/ee-shared-styles",
-    "paper-fab-transitions": "^0.1.0"
+    "paper-fab-transitions": "^0.1.0",
+    "highcharts-chart": "^1.1.5"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
