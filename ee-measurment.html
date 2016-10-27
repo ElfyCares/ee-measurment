@@ -1,12 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
-
-<!-- Iron -->
+<link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-
-<!-- Paper -->
-<link rel="import" href="../paper-input/paper-input.html">
 
 <!-- Elfy -->
 <link rel="import" href="../ee-helper-behaviors/ee-helper-behavior.html">
@@ -22,7 +18,7 @@ TODO: Pain scale
 
 Example:
 
-    <ee-measurment></ee-measurment>
+    <ee-vitality-log></ee-vitality-log>
 
 @demo demo/index.html
 @hero hero.svg
@@ -116,7 +112,7 @@ Example:
     Polymer({
       is: 'ee-measurment',
 
-      recordName: 'maeasurment',
+      recordName: 'measurment',
 
       behaviors: [
         Elfy.EEHelperBehavior,
@@ -223,7 +219,7 @@ Example:
           notify: true
         },
 
-        maeasurment: {
+        measurment: {
           type: Object,
           value() { return {} }
         },
@@ -252,17 +248,19 @@ Example:
       },
 
       observers: [
-        '_updateMeasurment(value,name,unit)'
+        '_updateMeasurment(value,name,unit,careRecipient,vitalityType)'
       ],
 
       _remove() {
         this.fire('remove')
       },
 
-      _updateMeasurment(value, name, unit) {
+      _updateMeasurment(value, name, unit, careRecipient, vitalityType) {
         this.set('measurment.value', value)
         this.set('measurment.name', name)
         this.set('measurment.unit', unit)
+        this.set('measurment.careRecipient', careRecipient)
+        this.set('measurment.type', vitalityType)
       },
 
       _computeValue(vitalityType) {
@@ -279,6 +277,11 @@ Example:
         let key = vitalityType + 'Name'
         return this[key]
       },
+
+      _recordCreated() {
+        this._remove()
+      },
+
     });
   </script>
 </dom-module>

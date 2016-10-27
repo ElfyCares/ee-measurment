@@ -1,0 +1,125 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!-- Iron -->
+
+<!-- Paper -->
+
+<!-- Shared -->
+<link rel="import" href="../ee-helper-behaviors/ee-helper-behavior.html">
+<link rel="import" href="../js-data-behaviors/js-data-collection-behavior.html">
+
+<!-- Third -->
+<link rel="import" href="../highcharts-chart/highcharts-chart.html">
+
+<!-- My -->
+
+<dom-module id="ee-measurment-charts">
+  <template>
+    <style is="custom-style" include="shared-styles">
+      :host {
+          display: block;
+      }
+
+      highcharts-chart {
+        --highcharts-min-height: 12em;
+      }
+    </style>
+    <template is="dom-repeat" items="[[measurmentGroups]]" as="measurmentGroup">
+      <highcharts-chart id="chart" class="m" y-label="[[measurmentGroup.unit]]" title="[[measurmentGroup.type]]" data="[[measurmentGroup.measurments]]" type="spline"></highcharts-chart>
+    </template>
+
+  </template>
+  <script>
+    Polymer({
+
+      is: 'ee-measurment-charts',
+
+      behaviors: [
+        Elfy.EEHelperBehavior,
+        Elfy.JSDataCollectionBehavior,
+      ],
+
+      properties: {
+        careRecipient: {
+          type: Object,
+          value() { return {} },
+          observer: '_careRecipientChanged'
+        },
+
+        measurments: {
+          type: Array,
+          value() { return [] },
+          observer: '_measurmentsChanged'
+        },
+
+        measurmentGroups: {
+          type: Array,
+          value() { return [] }
+        },
+
+        // xAxis: {
+        //   type: Object,
+        //   value() { return {} }
+        // },
+
+        // yAxis: {
+        //   type: Object,
+        //   value() { return {} }
+        // },
+
+      },
+
+      attached() {
+          this.set('xAxis', {
+            tickInterval: 1,
+            labels: {
+                enabled: true,
+                formatter: function() {
+                  return this.measurmentGroups[this.value].labels[this.value];
+                },
+            }
+          })
+
+          // this.yAxis = {
+          //   tickInterval: 1,
+          //   labels: {
+          //       enabled: true,
+          //       formatter: function() {
+          //         debugger
+          //         return this.measurmentGroups[this.value].y;},
+          //   }
+          // }
+      },
+
+      _measurmentsChanged(measurments) {
+        var groups = this.groupBy(measurments, function(e) { return e.type })
+        var g = []
+        for (var [key, value] of groups) {
+          g.push({'type': key, 'measurments': value.map((e) => { return e.value }),
+            'labels': value.map((e) => { return e.createdAt }), 'unit': value[0].unit})
+        }
+        this.set('measurmentGroups', g)
+      },
+
+      groupBy(list, keyGetter) {
+        const map = new Map();
+        list.forEach((item) => {
+            const key = keyGetter(item);
+            if (!map.has(key)) {
+                map.set(key, [item]);
+            } else {
+                map.get(key).push(item);
+            }
+        });
+        return map;
+      },
+
+      _careRecipientChanged(cr) {
+        if (!cr || !cr.id) return
+        this.JSData.collections = [{'name': 'measurments', 'query': {'careRecipientId': cr.id}}]
+        this._loadData()
+      }
+
+    });
+  </script>
+</dom-module>

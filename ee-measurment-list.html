@@ -5,8 +5,9 @@
 <!-- Paper -->
 <link rel="import" href="../paper-menu/paper-menu.html">
 <link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
 
-<!-- Elfy -->
+<!-- Shared -->
 <link rel="import" href="../ee-helper-behaviors/ee-helper-behavior.html">
 
 <!-- Third -->
@@ -15,6 +16,7 @@
 
 <!-- My -->
 <link rel="import" href="ee-measurment.html">
+<link rel="import" href="ee-measurment-charts.html">
 
 <dom-module id="ee-measurment-list">
   <template>
@@ -29,18 +31,19 @@
       }
     </style>
 
-    <ee-measurment-charts care-recipient="[[careRecipient]]"></ee-measurment-charts>
-
-    <template is="dom-repeat" items="{{measurments}}" as="measurment">
-      <ee-measurment
-        care-recipient="[[careRecipient]]"
-        measurment="{{measurment}}"
-        on-remove="_removeLog">
-      </ee-measurment>
-    </template>
+    <div id="measurmentContainer">
+      <template is="dom-repeat" items="{{measurments}}" as="measurment">
+        <ee-measurment
+          care-recipient="[[careRecipient]]"
+          measurment="{{measurment}}"
+          on-remove="_removeLog">
+        </ee-measurment>
+      </template>
+    </div>
 
     <div class="v-c">
-      <paper-fab-morph class="v-i" vertical-align="bottom" horizontal-align="left">
+      <paper-fab-morph id="addBtn" class="v-i"
+        vertical-align="top" horizontal-align="left" hidden$="[[hasMeasurments]]">
         <paper-fab icon="icons:add" class="dropdown-trigger"></paper-fab>
         <paper-material class="dropdown-content">
           <paper-menu>
@@ -53,6 +56,23 @@
         </paper-material>
       </paper-fab-morph>
     </div>
+    <paper-fab id="saveBtn" hidden$="[[!hasMeasurments]]" icon="icons:check" on-tap="save" class="m0a"></paper-fab>
+
+    <ee-measurment-charts care-recipient="[[careRecipient]]"></ee-measurment-charts>
+
+    <paper-tooltip
+      for="saveBtn"
+      position="bottom"
+      offset="14">
+      Save
+    </paper-tooltip>
+
+    <paper-tooltip
+      for="addBtn"
+      position="bottom"
+      offset="14">
+      Add a measurment
+    </paper-tooltip>
   </template>
   <script>
     Polymer({
@@ -73,6 +93,27 @@
           type: Array,
           value() { return [] }
         },
+
+        hasMeasurments: {
+          type: Boolean,
+          value: false,
+          computed: '_hasMeasurments(measurments, measurments.*)'
+        }
+      },
+
+      _hasMeasurments(measurments) {
+        if (measurments && measurments.length > 0) {
+          return true
+        } else {
+          return false
+        }
+      },
+
+      save() {
+        var nodes = Polymer.dom(this.root).querySelectorAll('ee-measurment')
+        Array.from(nodes).forEach((n) => {
+          n._save()
+        })
       },
 
       _addLog(e) {
