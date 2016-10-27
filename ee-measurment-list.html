@@ -43,7 +43,7 @@
       </template>
     </div>
 
-    <div class="v-c">
+    <div class="v-c" hidden$="[[!careRecipient.id]]">
       <paper-fab-morph id="addBtn" class="v-i"
         vertical-align="top" horizontal-align="left" hidden$="[[hasMeasurments]]">
         <paper-fab icon="icons:add" class="dropdown-trigger"></paper-fab>
@@ -59,6 +59,8 @@
       </paper-fab-morph>
     </div>
     <paper-fab id="saveBtn" hidden$="[[!hasMeasurments]]" icon="icons:check" on-tap="save" class="m0a"></paper-fab>
+
+    <div class="center" hidden="[[careRecipient.id]]">Please first select a care recipient.</div>
 
     <ee-measurment-charts care-recipient="[[careRecipient]]"></ee-measurment-charts>
 
