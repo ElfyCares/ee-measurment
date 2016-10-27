@@ -115,9 +115,12 @@
       },
 
       _careRecipientChanged(cr) {
-        if (!cr || !cr.id) return
-        this.JSData.collections = [{'name': 'measurments', 'query': {'careRecipientId': cr.id}}]
-        this._loadData()
+        if (!cr || !cr.id) {
+          this.set('measurments', [])
+        } else {
+          this.JSData.collections = [{'name': 'measurments', 'query': {'careRecipientId': cr.id}}]
+          this._loadData()
+        }
       }
 
     });
