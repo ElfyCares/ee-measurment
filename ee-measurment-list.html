@@ -62,8 +62,10 @@
 
     <div class="center" hidden="[[careRecipient.id]]">Please first select a care recipient.</div>
 
-    <ee-measurment-charts care-recipient="[[careRecipient]]"></ee-measurment-charts>
-
+    <template is="dom-if" if="[[!noCharts]]" restamp="true">
+      <ee-measurment-charts care-recipient="[[careRecipient]]"></ee-measurment-charts>
+    </template>
+    
     <paper-tooltip
       for="saveBtn"
       position="bottom"
@@ -102,7 +104,12 @@
           type: Boolean,
           value: false,
           computed: '_hasMeasurments(measurments, measurments.*)'
-        }
+        },
+
+        noCharts: {
+          type: Boolean,
+          value: false,
+        },
       },
 
       _hasMeasurments(measurments) {
