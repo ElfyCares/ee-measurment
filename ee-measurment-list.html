@@ -152,6 +152,7 @@
         var nodes = Polymer.dom(this.root).querySelectorAll('ee-measurment')
         Array.from(nodes).forEach((n) => {
           if (this.noSave) {
+            this.measurmentList = this.measurmentList || []
             this.push('measurmentList', n.measurment);
             n.remove()
           } else {
