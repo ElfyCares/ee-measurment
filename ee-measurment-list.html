@@ -71,7 +71,7 @@
       <template is="dom-repeat" items="[[measurmentList]]" as="measurment">
         <ee-action-item on-action-tapped="_removeLogInList">
           <div class="m">
-            <span>[[measurment.name]]</span>
+            <span>[[_uncamelize(measurment.type)]]</span>
             <span>[[measurment.value]]</span>
             <span>[[measurment.unit]]</span>
           </div>
@@ -154,7 +154,7 @@
         Array.from(nodes).forEach((n) => {
           if (this.noSave) {
             this.measurmentList = this.measurmentList || []
-            this.push('measurmentList', n.measurment);
+            this.push('measurmentList', {'type': n.measurment.type, 'value': n.measurment.value, 'unit': n.measurment.unit});
             n.remove()
           } else {
             n.save()
