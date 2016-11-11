@@ -104,7 +104,7 @@ Example:
           </ee-vitality-simple-input>
         <div>
       </template>
-      <paper-icon-button on-tap="_remove" icon="close"></paper-icon-button>
+      <paper-icon-button on-tap="remove" icon="close" tabindex="-1"></paper-icon-button>
     </div>
   </template>
 
@@ -251,8 +251,12 @@ Example:
         '_updateMeasurment(value,name,unit,careRecipient,vitalityType)'
       ],
 
-      _remove() {
+      remove() {
         this.fire('remove')
+      },
+
+      save() {
+        this._save()
       },
 
       _updateMeasurment(value, name, unit, careRecipient, vitalityType) {
@@ -279,7 +283,7 @@ Example:
       },
 
       _recordCreated() {
-        this._remove()
+        this.remove()
       },
 
     });

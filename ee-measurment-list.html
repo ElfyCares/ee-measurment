@@ -11,6 +11,7 @@
 <!-- Elfy -->
 <link rel="import" href="../ee-helper-behavior/ee-helper-behavior.html">
 <link rel="import" href="../ee-shared-styles/shared-styles.html">
+<link rel="import" href="../ee-action-item/action-item.html">
 
 <!-- Third -->
 <link rel="import" href="../paper-fab-transitions/paper-fab-transitions.html">
@@ -62,10 +63,22 @@
 
     <div class="center" hidden="[[careRecipient.id]]">Please first select a care recipient.</div>
 
-    <template is="dom-if" if="[[!noCharts]]" restamp="true">
+    <template is="dom-if" if="[[!noCharts]]">
       <ee-measurment-charts care-recipient="[[careRecipient]]"></ee-measurment-charts>
     </template>
-    
+
+    <template is="dom-if" if="[[asList]]">
+      <template is="dom-repeat" items="[[measurmentList]]" as="measurment">
+        <ee-action-item on-action-tapped="_removeLogInList">
+          <div class="m">
+            <span>[[measurment.name]]</span>
+            <span>[[measurment.value]]</span>
+            <span>[[measurment.unit]]</span>
+          </div>
+        </ee-action-item>
+      </template>
+    </template>
+
     <paper-tooltip
       for="saveBtn"
       position="bottom"
@@ -100,6 +113,11 @@
           value() { return [] }
         },
 
+        measurmentList: {
+          type: Array,
+          value() { return [] }
+        },
+
         hasMeasurments: {
           type: Boolean,
           value: false,
@@ -107,6 +125,16 @@
         },
 
         noCharts: {
+          type: Boolean,
+          value: false,
+        },
+
+        noSave: {
+          type: Boolean,
+          value: false,
+        },
+
+        asList: {
           type: Boolean,
           value: false,
         },
@@ -123,7 +151,12 @@
       save() {
         var nodes = Polymer.dom(this.root).querySelectorAll('ee-measurment')
         Array.from(nodes).forEach((n) => {
-          n._save()
+          if (this.noSave) {
+            this.push('measurmentList', n.measurment);
+            n.remove()
+          } else {
+            n.save()
+          }
         })
       },
 
@@ -132,6 +165,10 @@
         var measurment = App.Store.createRecord('measurments')
         measurment.vitalityType = vitalityType
         this.push('measurments', measurment);
+      },
+
+      _removeLogInList(e) {
+        this.splice('measurmentList', this.measurmentList.indexOf(e.model.measurment), 1);
       },
 
       _removeLog(e) {

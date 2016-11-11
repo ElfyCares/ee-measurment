@@ -10,6 +10,7 @@
     "js-data-behaviors": "git+https://github.com/ElfyCares/js-data-behaviors",
     "demo-models": "git+https://github.com/ElfyCares/demo-models",
     "ee-shared-styles": "git+https://github.com/ElfyCares/ee-shared-styles",
+    "ee-measurment": "git+https://github.com/ElfyCares/ee-measurment",
     "paper-fab-transitions": "^0.1.0",
     "highcharts-chart": "^1.1.5"
   },
