@@ -115,9 +115,8 @@
       },
 
       _careRecipientChanged(cr) {
-        if (!cr || !cr.id) {
-          this.set('measurments', [])
-        } else {
+        this.set('measurments', [])
+        if (cr && cr.id) {
           this.JSData.collections = [{'name': 'measurments', 'query': {'careRecipientId': cr.id}}]
           this._loadData()
         }
