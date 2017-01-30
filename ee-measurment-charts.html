@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <!-- Iron -->
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 
 <!-- Paper -->
 
@@ -37,6 +38,7 @@
       behaviors: [
         Elfy.EEHelperBehavior,
         Elfy.JSDataCollectionBehavior,
+        Polymer.IronResizableBehavior,
       ],
 
       properties: {
@@ -79,6 +81,8 @@
                 },
             }
           })
+
+          this.fire('resize')
 
           // this.yAxis = {
           //   tickInterval: 1,
