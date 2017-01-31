@@ -69,13 +69,14 @@
 
     <template is="dom-if" if="[[asList]]">
       <template is="dom-repeat" items="[[measurmentList]]" as="measurment">
-        <ee-action-item on-action-tapped="_removeLogInList">
-          <div class="m">
-            <span>[[_uncamelize(measurment.type)]]</span>
-            <span>[[measurment.value]]</span>
-            <span>[[measurment.unit]]</span>
-          </div>
-        </ee-action-item>
+        <div class="v-c">
+            <div class="m">
+              <span>[[_uncamelize(measurment.type)]]</span>
+              <span>[[measurment.value]]</span>
+              <span>[[measurment.unit]]</span>
+              <span>✓</span>
+            </div>
+        </div>
       </template>
     </template>
 
@@ -152,9 +153,9 @@
       save() {
         var nodes = Polymer.dom(this.root).querySelectorAll('ee-measurment')
         Array.from(nodes).forEach((n) => {
+          this.measurmentList = this.measurmentList || []
+          this.push('measurmentList', {'type': n.measurment.type, 'value': n.measurment.value, 'unit': n.measurment.unit});
           if (this.noSave) {
-            this.measurmentList = this.measurmentList || []
-            this.push('measurmentList', {'type': n.measurment.type, 'value': n.measurment.value, 'unit': n.measurment.unit});
             n.remove()
           } else {
             n.save()
@@ -167,10 +168,6 @@
         var measurment = App.Store.createRecord('measurments')
         measurment.vitalityType = vitalityType
         this.push('measurments', measurment);
-      },
-
-      _removeLogInList(e) {
-        this.splice('measurmentList', this.measurmentList.indexOf(e.model.measurment), 1);
       },
 
       _removeLog(e) {
