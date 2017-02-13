@@ -142,6 +142,10 @@
         },
       },
 
+      showMenu() {
+        this.$$('#saveBtn').fire('tap')
+      },
+
       _hasMeasurments(measurments) {
         if (measurments && measurments.length > 0) {
           return true
