@@ -47,7 +47,7 @@
     <div class="v-c" hidden$="[[!careRecipient.id]]">
       <paper-fab-morph id="addBtn" class="v-i"
         vertical-align="top" horizontal-align="left" hidden$="[[hasMeasurments]]">
-        <paper-fab icon="icons:add" class="dropdown-trigger"></paper-fab>
+        <paper-fab id="addFab" icon="icons:add" class="dropdown-trigger"></paper-fab>
         <paper-material class="dropdown-content">
           <paper-menu>
             <paper-item on-tap="_addLog" data-args="bloodPressure">Blood Pressure</paper-item>
@@ -143,7 +143,7 @@
       },
 
       showMenu() {
-        this.$$('#saveBtn').fire('tap')
+        this.$$('#addFab').fire('tap')
       },
 
       _hasMeasurments(measurments) {
